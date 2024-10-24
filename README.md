@@ -25,4 +25,5 @@ There are three of them to determine whenever after resize UI is responsive or h
 
 ## Attachments
 `PlaybackResizeTesting Sample.mp4` - video showing the app behavior. From 0:18 app is barely likely to respond due to hangs
+
 `PlaybackResizeTesting TimeProfiler.trace` - TimeProfiler using the instruments showing the hangs where we've spotted that the most time cosnuming call is `layoutSubviews()` on `AVNowPlayingTransportBar`
