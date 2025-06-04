@@ -3,9 +3,9 @@ Small project showing the behavior of application after Live stream being resize
 
 ## Reproduce steps
 - Wait for video to be started
-- Click on one of buttons, player should resize to the fullscreen
-- Use transport bar to seek on to the some moment in the past (Just not to the head - LIVE badge should be grey)
-- Use customMenuItem on transportBar to resize player to the window
+- Click on SEEK BACK 10s button, player should go back behind 10 seconds of its LIVE state
+- Click on FULL SCREEN button, player should resize to the fullscreen
+- Press Menu/Back gesture on remote, player should resize back to minimized window
 - Try to change focus on bottom buttons, app is barely likely to respond
 
 ## Notes
@@ -20,8 +20,9 @@ It contains only a couple of elements:
 On given action player goes back to the "window" mode.
 
 `ViewController` contains VideoPlayerViewController and a simple StackView with three UIButtons.
-Each UIButton's action does the same - resizing player to the full screen.
-There are three of them to determine whenever after resize UI is responsive or hangs were occurred.
+First button resizes player to the full screen.
+Second button seeks back player's by 10 seconds from its live state.
+Third button brings player up to its live state.
 
 ## Attachments
 `PlaybackResizeTesting Sample.mp4` - video showing the app behavior. From 0:18 app is barely likely to respond due to hangs
