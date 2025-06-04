@@ -82,6 +82,14 @@ class ViewController: UIViewController {
     @objc private func buttonTapped() {
         switchScreen()
     }
+
+    @objc private func seekButtonTapped() {
+        videoPlayer.seek(value: 10)
+    }
+    
+    @objc private func backToLiveButtonTapped() {
+        videoPlayer.seek(value: 0)
+    }
 }
 
 private extension ViewController {
@@ -98,15 +106,29 @@ private extension ViewController {
             stackView.heightAnchor.constraint(equalToConstant: 100),
         ])
 
-        for buttonIndex in 0 ..< 3 {
-            let button = UIButton()
-            button.translatesAutoresizingMaskIntoConstraints = false
-            button.setTitle("Button \(buttonIndex)", for: .normal)
-            button.setTitleColor(.black, for: .focused)
-            button.backgroundColor = .darkGray
-            button.addTarget(self, action: #selector(buttonTapped), for: UIControl.Event.primaryActionTriggered)
-            stackView.addArrangedSubview(button)
-        }
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("FULL SCREEN", for: .normal)
+        button.setTitleColor(.black, for: .focused)
+        button.backgroundColor = .darkGray
+        button.addTarget(self, action: #selector(buttonTapped), for: UIControl.Event.primaryActionTriggered)
+        stackView.addArrangedSubview(button)
+
+        let button2 = UIButton()
+        button2.translatesAutoresizingMaskIntoConstraints = false
+        button2.setTitle("SEEK BACK 10s", for: .normal)
+        button2.setTitleColor(.black, for: .focused)
+        button2.backgroundColor = .darkGray
+        button2.addTarget(self, action: #selector(seekButtonTapped), for: UIControl.Event.primaryActionTriggered)
+        stackView.addArrangedSubview(button2)
+
+        let button3 = UIButton()
+        button3.translatesAutoresizingMaskIntoConstraints = false
+        button3.setTitle("BACK TO LIVE", for: .normal)
+        button3.setTitleColor(.black, for: .focused)
+        button3.backgroundColor = .darkGray
+        button3.addTarget(self, action: #selector(backToLiveButtonTapped), for: UIControl.Event.primaryActionTriggered)
+        stackView.addArrangedSubview(button3)
     }
 
     func addPlayerContainerView() {

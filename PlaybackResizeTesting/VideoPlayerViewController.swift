@@ -1,8 +1,15 @@
 import AVKit
+import AVFoundation
 import Foundation
 
 final class VideoPlayerViewController: UIViewController {
     var onActionButtonTapped: (() -> Void)?
+
+    private lazy var backActionRecognizer: UITapGestureRecognizer = {
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleBackActionTap(gesture:)))
+        tapRecognizer.allowedPressTypes = [NSNumber(value: UIPress.PressType.menu.rawValue)]
+        return tapRecognizer
+    }()
 
     private lazy var playerController: AVPlayerViewController = {
         let videoPlayer = AVPlayerViewController()
@@ -29,9 +36,31 @@ final class VideoPlayerViewController: UIViewController {
 
     func play() {
         loadViewIfNeeded()
+
+        view.addGestureRecognizer(backActionRecognizer)
+
         addTransportBarAction()
         player.currentItem?.externalMetadata = createMetadataItems()
         player.play()
+    }
+
+    func seek(value: Double) {
+
+        guard
+            let currentItem = player.currentItem,
+            let lastRangeValue = currentItem.seekableTimeRanges.last
+        else {
+            return
+        }
+
+        let lastRange = lastRangeValue.timeRangeValue
+        let liveEdgeTime = CMTimeRangeGetEnd(lastRange)
+
+        let targetTime = CMTimeSubtract(
+            liveEdgeTime,
+            CMTime(seconds: value, preferredTimescale: liveEdgeTime.timescale))
+
+        player.seek(to: targetTime, toleranceBefore: .zero, toleranceAfter: .zero)
     }
 
     private func addTransportBarAction() {
@@ -42,6 +71,9 @@ final class VideoPlayerViewController: UIViewController {
         }
 
         playerController.transportBarCustomMenuItems = [action]
+//        playerController.showsPlaybackControls = false
+        playerController.playbackControlsIncludeTransportBar = false
+        playerController.playbackControlsIncludeInfoViews = false
     }
 
     private func createMetadataItems() -> [AVMetadataItem] {
@@ -61,5 +93,10 @@ final class VideoPlayerViewController: UIViewController {
         item.value = value as? NSCopying & NSObjectProtocol
         item.extendedLanguageTag = "und"
         return item.copy() as! AVMetadataItem
+    }
+
+    @objc private func handleBackActionTap(gesture: UITapGestureRecognizer) {
+        guard gesture.state == UIGestureRecognizer.State.ended else { return }
+        onActionButtonTapped?()
     }
 }
